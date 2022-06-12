@@ -13,6 +13,6 @@ datasource db {
 model ShortURL {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   url       String
-  shortUrl  String
+  shortUrl  String   @unique
   createdAt DateTime @default(now())
 }
