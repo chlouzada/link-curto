@@ -16,5 +16,5 @@ export default async function handler(
 
   if (!link) return res.status(404).json({ message: "link not found" });
 
-  res.redirect(link.url);
+  res.json(link);
 }
