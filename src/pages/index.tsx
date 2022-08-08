@@ -3,6 +3,11 @@ import Link from "next/link";
 import axios from "axios";
 import { useState } from "react";
 import { generateSlug } from "random-word-slugs";
+import { LS } from "@/utils/LS";
+import dynamic from "next/dynamic";
+import { Recent } from "@/components/Recents";
+
+const Recents = dynamic(() => import("@/components/Recents"), { ssr: false });
 
 const Home: NextPage = () => {
   const [url, setUrl] = useState("");
@@ -28,6 +33,15 @@ const Home: NextPage = () => {
       setSuccess(window.location.href + shortUrl);
       setUrl("");
       setShortUrl("");
+
+      LS.set(
+        "recents",
+        [
+          { url: url, short: shortUrl, createdAt: new Date().toISOString() },
+          ...(LS.get<Recent[]>("recents") || []),
+        ].slice(0, 5)
+      );
+
       setLoading(false);
     } catch (error) {
       setSuccess("");
@@ -91,10 +105,9 @@ const Home: NextPage = () => {
           ) : (
             <button className="mt-4">Gerar</button>
           )}
-          <div className="mt-1">
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <Link href={success}>{success}</Link>}
-          </div>
+          {error && <p className="text-red-500">{error}</p>}
+
+          <Recents />
         </form>
       </div>
     </main>
