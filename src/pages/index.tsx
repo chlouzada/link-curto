@@ -8,20 +8,21 @@ const Home: NextPage = () => {
   const [shortUrl, setShortUrl] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     try {
+      setLoading(true);
       const res = await axios.post(`/api/new`, { url, shortUrl });
-      setSuccess(
-        `${process.env.VERCEL_URL || "localhost:3000/api/redirect/"}${shortUrl}`
-      );
+      setSuccess(window.location.href + shortUrl);
       setUrl("");
       setShortUrl("");
+      setLoading(false);
     } catch (error) {
       setSuccess("");
+      setLoading(false);
       if (axios.isAxiosError(error))
-        if (error.response?.status === 403)
-          return setError("Short já existe");
+        if (error.response?.status === 403) return setError("Short já existe");
 
       setError("Algo deu errado");
     }
@@ -53,7 +54,15 @@ const Home: NextPage = () => {
               value={shortUrl}
             />
           </div>
-          <button className="mt-4">Gerar</button>
+          {loading ? (
+            <button className="mt-4" disabled>
+              Enviando...
+            </button>
+          ) : (
+            <button className="mt-4">
+              Gerar
+            </button>
+          )}
           <div className="mt-1">
             {error && <p className="text-red-500">{error}</p>}
             {success && <Link href={success}>{success}</Link>}
