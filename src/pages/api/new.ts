@@ -8,12 +8,19 @@ export default async function handler(
 ) {
   const { url, shortUrl } = req.body;
 
-  const link = await prisma.shortURL.create({
-    data: {
-      url,
-      shortUrl,
-    },
-  });
+  try {
+    const link = await prisma.shortURL.create({
+      data: {
+        url,
+        shortUrl,
+      },
+    });
+    res.status(200).json(link);
+  } catch (error) {
+    // check if prisma duplicate key error
+    if ((error as any).code === "P2002")
+      return res.status(403).send(undefined);
 
-  res.status(200).json(link);
+    res.status(500).send(undefined);
+  }
 }
