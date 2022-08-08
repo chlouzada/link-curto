@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import axios from "axios";
 import { useState } from "react";
+import { generateSlug } from "random-word-slugs";
 
 const Home: NextPage = () => {
   const [url, setUrl] = useState("");
@@ -9,6 +10,7 @@ const Home: NextPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [slug, setSlug] = useState(() => generateSlug());
 
   const handleSubmit = async () => {
     try {
@@ -36,7 +38,7 @@ const Home: NextPage = () => {
             e.preventDefault();
             handleSubmit();
           }}
-          className="w-1/4 flex flex-col justify-center gap-2 shadow-md p-4 rounded-md"
+          className="w-1/4 flex flex-col justify-center gap-6 shadow-md p-4 rounded-md"
         >
           <div>
             <label htmlFor="url">URL</label>
@@ -47,7 +49,27 @@ const Home: NextPage = () => {
             />
           </div>
           <div>
-            <label htmlFor="short">Short</label>
+            <div className="flex justify-between">
+              <label htmlFor="short">Short</label>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+                onClick={() => {
+                  setSlug(generateSlug())
+                  setShortUrl(slug);
+                }}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+            </div>
             <input
               type="text"
               onChange={(e) => setShortUrl(e.target.value)}
@@ -59,9 +81,7 @@ const Home: NextPage = () => {
               Enviando...
             </button>
           ) : (
-            <button className="mt-4">
-              Gerar
-            </button>
+            <button className="mt-4">Gerar</button>
           )}
           <div className="mt-1">
             {error && <p className="text-red-500">{error}</p>}
