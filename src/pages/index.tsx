@@ -10,10 +10,18 @@ const Home: NextPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const [slug, setSlug] = useState(() => generateSlug());
 
   const handleSubmit = async () => {
     try {
+      // valite url
+      const regex =
+        /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
+
+      if (!regex.test(url)) {
+        setError("URL inválida");
+        return;
+      }
+
       setLoading(true);
       const res = await axios.post(`/api/new`, { url, shortUrl });
       setSuccess(window.location.href + shortUrl);
@@ -38,7 +46,7 @@ const Home: NextPage = () => {
             e.preventDefault();
             handleSubmit();
           }}
-          className="w-1/4 flex flex-col justify-center gap-6 shadow-md p-4 rounded-md"
+          className="w-1/4 flex flex-col justify-center gap-4 shadow-md p-4 rounded-md"
         >
           <div>
             <label htmlFor="url">URL</label>
@@ -59,8 +67,7 @@ const Home: NextPage = () => {
                 stroke="currentColor"
                 strokeWidth="2"
                 onClick={() => {
-                  setSlug(generateSlug())
-                  setShortUrl(slug);
+                  setShortUrl(generateSlug());
                 }}
               >
                 <path
