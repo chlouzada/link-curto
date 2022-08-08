@@ -12,6 +12,8 @@ export type Recent = {
 export default function Recents() {
   const recents = LS.get<Recent[]>("recents");
 
+  if (recents?.length === 0) return <></>;
+
   return (
     <>
       <div className="border" />
