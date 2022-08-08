@@ -15,4 +15,9 @@ export class LS {
       JSON.stringify(data)
     );
   }
+
+  static remove<T>(path: Paths): void {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem(`${process.env.NODE_ENV}-${path}`);
+  }
 }

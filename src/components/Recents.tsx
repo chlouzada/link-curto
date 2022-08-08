@@ -1,7 +1,7 @@
 import { LS } from "@/utils/LS";
 import moment from "moment";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 export type Recent = {
   url: string;
@@ -12,7 +12,7 @@ export type Recent = {
 export default function Recents() {
   const recents = LS.get<Recent[]>("recents");
 
-  if (recents?.length === 0) return <></>;
+  if (!recents) return <></>;
 
   return (
     <>
@@ -54,6 +54,17 @@ export default function Recents() {
           </li>
         ))}
       </ul>
+      <div className=" flex justify-end">
+        <span
+          className="cursor-pointer text-blue-600 hover:text-blue-700 transition duration-300 ease-in-out text-xs text-end"
+          onClick={() => {
+            LS.remove("recents");
+            window.location.reload();
+          }}
+        >
+          Clear
+        </span>
+      </div>
     </>
   );
 }
