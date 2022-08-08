@@ -13,7 +13,8 @@ const Home: NextPage = () => {
 
   const handleSubmit = async () => {
     try {
-      // valite url
+      setError("");
+
       const regex =
         /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
 
